@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Angular 2 Lessons</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/systemjs@0.19.40/dist/system.js"></script>
+    <script>
+        SystemJS.config({
+            paths: {
+                "app": "/"
+            },
+            browserConfig: {
+                "baseURL": "/"
+            },
+            devConfig: {
+                "map": {
+                    "plugin-babel": "https://unpkg.com/systemjs-plugin-babel@0.0.17/"
+                }
+            },
+            transpiler: "plugin-babel",
+            packages: {
+                "app": {
+                    "main": "app.js",
+                    "meta": {
+                        "*.js": {
+                            "loader": "plugin-babel"
+                        }
+                    }
+                },
+                "https://unpkg.com/systemjs-plugin-babel@0.0.17/":{
+                    "main": "plugin-babel.js",
+                    "map": {
+                        "systemjs-babel-build": {
+                            "node": "./systemjs-babel-node.js",
+                            "browser": "./systemjs-babel-browser.js",
+                            "default": "./systemjs-babel-browser.js"
+                        }
+                    },
+                    "meta": {
+                        "./plugin-babel.js": {
+                            "format": "cjs"
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</head>
+<body>
+
+<script>
+    System.import('app');
+</script>
+</body>
+</html>

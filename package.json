@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "webpack",    
+    "build": "webpack",
     "start": "webpack-dev-server"
   },
   "author": "",
@@ -20,5 +20,13 @@
   },
   "dependencies": {
     "babel-runtime": "^6.18.0"
+  },
+  "jspm": {
+    "name": "promise-lessons",
+    "main": "promise-lessons.js",
+    "dependencies": {},
+    "devDependencies": {
+      "plugin-babel": "npm:systemjs-plugin-babel@^0.0.17"
+    }
   }
 }
