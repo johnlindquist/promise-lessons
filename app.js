@@ -20,19 +20,26 @@ const wait = value => {
     })
 }
 
-fetch('http://swapi.co/api/people/2/')
-    .then(res => res.json())
-    .then(body => body.name)
-    .then(log)
-    .then(wait)
-    .then(write)
-    .then(wait)
-    .then(c3po)
-    .then(log)
-    .then(wait)
-    .then(write)
-    .catch(err => {
-        console.log(err)
-        return 'Recover'
-    })
-    .then(write)
+const run = async function(){
+    const {name:luke} = await fetch('http://swapi.co/api/people/1/')
+        .then(res => res.json())
+
+    log(luke)
+
+    await wait()
+
+    write(luke)
+
+    const {name:c3po} = await fetch('http://swapi.co/api/people/2/')
+        .then(res => res.json())
+
+    const names = `${luke}, ${c3po}`
+
+    log(names)
+
+    await wait()
+
+    write(names)
+
+}
+run()
