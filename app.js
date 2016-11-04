@@ -16,16 +16,23 @@ const wait = value => {
     })
 }
 
+const waitRandom = value => {
+    return new Promise(resolve => {
+        setTimeout(()=>{
+            resolve(value)
+        },Math.random() * 2000)
+    })
+}
+
 const run = async function(){
     const peoplePromises = [1,2,3,4,5].map(num =>
         fetch(`http://swapi.co/api/people/${num}/`)
             .then(res => res.json())
+            .then(waitRandom)
     )
 
-    const people = await Promise.all(peoplePromises)
+    const person = await Promise.race(peoplePromises)
 
-    const names = people.map(person => person.name)
-
-    log(names)
+    log(person.name)
 }
 run()
