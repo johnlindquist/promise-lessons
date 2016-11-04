@@ -8,10 +8,6 @@ const write = value => {
     return value
 }
 
-const c3po = value => fetch('23ataw3taw3t')
-    .then(res => res.json())
-    .then(body => `${value}, ${body.name}`)
-
 const wait = value => {
     return new Promise(resolve => {
         setTimeout(()=>{
@@ -21,25 +17,15 @@ const wait = value => {
 }
 
 const run = async function(){
-    const {name:luke} = await fetch('http://swapi.co/api/people/1/')
-        .then(res => res.json())
+    const peoplePromises = [1,2,3,4,5].map(num =>
+        fetch(`http://swapi.co/api/people/${num}/`)
+            .then(res => res.json())
+    )
 
-    log(luke)
+    const people = await Promise.all(peoplePromises)
 
-    await wait()
-
-    write(luke)
-
-    const {name:c3po} = await fetch('http://swapi.co/api/people/2/')
-        .then(res => res.json())
-
-    const names = `${luke}, ${c3po}`
+    const names = people.map(person => person.name)
 
     log(names)
-
-    await wait()
-
-    write(names)
-
 }
 run()
