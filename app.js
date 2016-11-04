@@ -8,7 +8,7 @@ const write = value => {
     return value
 }
 
-const c3po = value => fetch('http://swapi.co/api/people/2/')
+const c3po = value => fetch('23ataw3taw3t')
     .then(res => res.json())
     .then(body => `${value}, ${body.name}`)
 
@@ -20,7 +20,7 @@ const wait = value => {
     })
 }
 
-fetch('http://swapi.co/api/people/1/')
+fetch('http://swapi.co/api/people/2/')
     .then(res => res.json())
     .then(body => body.name)
     .then(log)
@@ -30,4 +30,9 @@ fetch('http://swapi.co/api/people/1/')
     .then(c3po)
     .then(log)
     .then(wait)
+    .then(write)
+    .catch(err => {
+        console.log(err)
+        return 'Recover'
+    })
     .then(write)
