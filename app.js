@@ -8,7 +8,9 @@ const write = value => {
     return value
 }
 
-const john = value => `${value}, John`
+const c3po = value => fetch('http://swapi.co/api/people/2/')
+    .then(res => res.json())
+    .then(body => `${value}, ${body.name}`)
 
 const wait = value => {
     return new Promise(resolve => {
@@ -18,12 +20,14 @@ const wait = value => {
     })
 }
 
-Promise.resolve('Hello')
+fetch('http://swapi.co/api/people/1/')
+    .then(res => res.json())
+    .then(body => body.name)
     .then(log)
     .then(wait)
     .then(write)
     .then(wait)
-    .then(john)
+    .then(c3po)
     .then(log)
     .then(wait)
     .then(write)
