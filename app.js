@@ -25,14 +25,17 @@ const waitRandom = value => {
 }
 
 const run = async function(){
-    const peoplePromises = [1,2,3,4,5].map(num =>
-        fetch(`http://swapi.co/api/people/${num}/`)
+    const people = await [3,1,2,4,5].reduce(async (promise, num)=>{
+        const acc = await promise
+
+        const person = await fetch(`http://swapi.co/api/people/${num}/`)
             .then(res => res.json())
-            .then(waitRandom)
-    )
 
-    const person = await Promise.race(peoplePromises)
+        return await Promise.resolve([...acc, person])
+    }, Promise.resolve([]))
 
-    log(person.name)
+    const names = people.map(person => person.name)
+
+    console.log(names)
 }
 run()
