@@ -1,22 +1,30 @@
 import {Observable} from 'rxjs'
 
 const ids = [4, 7, 9, 10]
-const api = (type, id)=> Observable.ajax(`https://starwars.egghead.training/${type}/${id}/`)
-    .map(ajaxResponse => ajaxResponse.response)
+const api =
+    end =>
+    type =>
+    id =>
+        Observable.ajax(`${end}/${type}/${id}/`)
+            .map(ajaxResponse => ajaxResponse.response)
+
+const starWars = api(`https://starwars.egghead.training`)
+const peopleApi = starWars('people')
+const filmsApi = starWars('films')
 
 const writePerson = person =>
     document.body.innerHTML += `
         <h2>${person.name}</h2>
         <ul>
             ${person.titles.map(title =>
-            `<li>${title}</li>`).join('')
-            }
+        `<li>${title}</li>`).join('')
+        }
         </ul>
     `
 
 const loadFilms = person =>
     Observable.from(person.films)
-        .concatMap(id => api('films', id))
+        .concatMap(filmsApi)
         .map(film => ({name: person.name, title: film.title}))
 
 
@@ -29,7 +37,7 @@ const formatGroup = group => group.reduce((acc, {name, title}) => (
 
 
 Observable.from(ids)
-    .concatMap(id => api('people', id))
+    .concatMap(peopleApi)
     .concatMap(loadFilms)
     .groupBy(({name}) => name)
     .mergeMap(formatGroup)
