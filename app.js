@@ -8,31 +8,19 @@ const write = value => {
     return value
 }
 
-const wait = value => {
-    return new Promise(resolve => {
-        setTimeout(()=>{
-            resolve(value)
-        },1000)
-    })
-}
-
-const waitRandom = value => {
-    return new Promise(resolve => {
-        setTimeout(()=>{
-            resolve(value)
-        },Math.random() * 2000)
-    })
-}
-
 const run = async function(){
-    const peoplePromises = [1,2,3,4,5].map(num =>
-        fetch(`http://swapi.co/api/people/${num}/`)
+    const ids = [1,5,3,4,2]
+
+    const people = []
+    for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        const person = await fetch(`https://starwars.egghead.training/people/${id}/`)
             .then(res => res.json())
-            .then(waitRandom)
-    )
+        people.push(person)
+        write(person.name)
+    }
 
-    const person = await Promise.race(peoplePromises)
+    // people.map(p => p.name).forEach(write)
 
-    log(person.name)
 }
 run()
