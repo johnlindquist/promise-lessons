@@ -1,38 +1,36 @@
-const log = value => {
-    console.log(value)
-    return value
-}
+import {Observable} from 'rxjs'
 
-const write = value => {
-    document.body.innerHTML += `<div>${value}</div>`
-    return value
-}
+const ids = [4, 7, 9, 10]
+const api = (type, id)=> Observable.ajax(`https://starwars.egghead.training/${type}/${id}/`)
+    .map(ajaxResponse => ajaxResponse.response)
 
-const wait = value => {
-    return new Promise(resolve => {
-        setTimeout(()=>{
-            resolve(value)
-        },1000)
-    })
-}
+const writePerson = person =>
+    document.body.innerHTML += `
+        <h2>${person.name}</h2>
+        <ul>
+            ${person.titles.map(title =>
+            `<li>${title}</li>`).join('')
+            }
+        </ul>
+    `
 
-const waitRandom = value => {
-    return new Promise(resolve => {
-        setTimeout(()=>{
-            resolve(value)
-        },Math.random() * 2000)
-    })
-}
+const loadFilms = person =>
+    Observable.from(person.films)
+        .concatMap(id => api('films', id))
+        .map(film => ({name: person.name, title: film.title}))
 
-const run = async function(){
-    const peoplePromises = [1,2,3,4,5].map(num =>
-        fetch(`http://swapi.co/api/people/${num}/`)
-            .then(res => res.json())
-            .then(waitRandom)
-    )
 
-    const person = await Promise.race(peoplePromises)
+const formatGroup = group => group.reduce((acc, {name, title}) => (
+    {
+        name,
+        titles: [title, ...acc.titles]
+    }
+), {name: '', titles: []})
 
-    log(person.name)
-}
-run()
+
+Observable.from(ids)
+    .concatMap(id => api('people', id))
+    .concatMap(loadFilms)
+    .groupBy(({name}) => name)
+    .mergeMap(formatGroup)
+    .subscribe(writePerson)
